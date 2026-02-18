@@ -431,6 +431,99 @@ void runPrio(int testNumber, TestCase* tc){
     printResults(testNumber,tc);
 }
 
+void runRoundRobin(int testNumber, TestCase* tc){
+    cout << testNumber << " " << tc->algorithm << endl;
+    int n = tc->size;
+    Process** processes = tc->processes;
+    int quantum = tc->quantum;
+
+    int completed = 0;
+    int currentTime = 0;
+    int idx = 0;
+
+    //Sort Processes by arrival time for easy processing 
+    sort(processes, processes + n, [](Process* a, Process* b){
+        if (a->arrival != b->arrival){
+            return a->arrival < b->arrival;
+        }
+        return a->id < b->id;
+    });
+
+    deque<Process*> readyQueue;
+
+    while (completed < n){
+        // Add all newly arrived processes to the front 
+        // maintain arrival order among new arrivals 
+        vector<Process*> newArrivals;
+        while (idx < n && processes[idx]->arrival <= currentTime){
+            newArrivals.push_back(processes[idx]);
+            idx++;
+        }
+
+        //Add new Arrivals to front (priority over waiting processes)
+        for (int i = newArrivals.size() - 1; i >= 0; i--){
+            readyQueue.push_front(newArrivals[i]);
+        }
+
+        //if queue is empty, CPI is idle - jump to next arrival
+        if (readyQueue.empty()) {
+            currentTime = processes[idx]->arrival;
+            continue;
+        }
+
+        //Get next process from Front of queue
+        Process* p = readyQueue.front();
+        readyQueue.pop_front();
+
+        // Set start time if first time running 
+        if (p->start_time == -1){
+            p->start_time = currentTime;
+        }
+
+        //Calculate how long this process will run
+        int runTime = min(quantum, p->remaining);
+        p->remaining -= runTime;
+
+        //determine if process is complete
+        bool finished = (p->remaining == 0);
+
+        //output Gantt chart entry
+        cout << currentTime << " " << p->id << " " << runTime;
+        if (finished){
+            cout << "X";
+            p->completion_time = currentTime + runTime;
+            completed++;
+        }
+
+        cout << endl;
+
+        //Update current time
+        currentTime += runTime;
+
+        // Check for processes that arrived during this execution because these will be added in the next iteration 
+        //To ensure priority over the currently preempted process 
+
+        //If process is not finished we add it to the BACK to the queue
+        //Because preempted processes goes to the back
+        if (!finished) {
+            //check for new arrivals
+            while (idx < n && processes[idx]->arrival <= currentTime){
+                readyQueue.push_front(processes[idx]);
+                idx++;
+            }
+            //add preempted process to back
+            readyQueue.push_back(p);
+        }
+    }
+
+    sort(processes, processes + n, [](Process* a, Process* b){
+        return a->id < b->id;
+    });
+
+    printResults(testNumber, tc);
+
+}
+
 int main(void){
     int num_test;
     cin >> num_test;
@@ -442,6 +535,11 @@ int main(void){
         
         cin >> num_process >> algorithm;
         TestCase* testCase = new TestCase(num_process, algorithm);
+
+        //Read time quantum if Round Robin
+        if (algorithm == "RR"){
+            cin >> testCase->quantum;
+        }
         
         // Iterates through each process per test case
         for (int j = 0; j < num_process; j++){
@@ -461,6 +559,9 @@ int main(void){
             runSJF(i+1,testCase);
         } else if (algorithm == "P"){
             runPrio(i+1,testCase);
+        } 
+        else if (algorithm == "RR"){
+            runRoundRobin(i+1, testCase);
         }
     }
     

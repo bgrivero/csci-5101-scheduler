@@ -173,7 +173,7 @@ void runFCFS(int testNumber, TestCase* tc){
             p->start_time = currentTime;
         }
 
-        cout << currentTime << " " << chosenID << " " << p->burst << "X" << endl;
+        cout << currentTime << " " << p->id << " " << p->burst << "X" << endl;
         currentTime += p->burst;
         p->remaining = 0;
         p->completion_time = currentTime;
@@ -184,6 +184,8 @@ void runFCFS(int testNumber, TestCase* tc){
 };
 
 void runSRTF(int testNumber, TestCase* tc){
+    // Print the test number and algorithm name to match output for gantt "chart".
+    cout << testNumber << " " << tc->algorithm << endl;
     int n = tc->size;
     Process** processes = tc->processes;
     
@@ -264,6 +266,10 @@ void runSRTF(int testNumber, TestCase* tc){
             p->completion_time = currentTime + runDuration;
             done[chosenID] = true;
             completed ++;
+            cout << currentTime << " " << p->id << " " << runDuration << "X" << endl;
+        }
+        else {
+            cout << currentTime << " " << p->id << " " << runDuration << endl;
         }
         currentTime += runDuration;
     }

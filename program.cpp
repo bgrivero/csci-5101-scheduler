@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <limits.h>
 #include <iostream>
 using namespace std;
 
@@ -158,7 +159,7 @@ void runFCFS(int testNumber, TestCase* tc){
         
         // Handle CPU being idle by skipping to next time where a process arrives
         if (chosenID == -1){
-            int timeJump = 5000; // Temporary value that is high 
+            int timeJump = INT_MAX; // Using the highest possible number as temporary variable
             for (int i = 0; i < n; i++){
                 if (!done[i] && processes[i]->arrival < timeJump){
                     timeJump = processes[i]->arrival;
@@ -218,7 +219,7 @@ void runSRTF(int testNumber, TestCase* tc){
         
         // Handle CPU being idle by skipping to next time where a process arrives
         if (chosenID == -1){
-            int timeJump = 5000; // Temporary value that is high 
+            int timeJump = INT_MAX; // Using the highest possible number as temporary variable 
             for (int i = 0; i < n; i++){
                 if (!done[i] && processes[i]->arrival < timeJump){
                     timeJump = processes[i]->arrival;

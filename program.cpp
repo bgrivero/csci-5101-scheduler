@@ -386,8 +386,11 @@ void runPrio(int testNumber, TestCase* tc){
 
         // once you have emptied the ready queue, jump to the next process
         if (ready_queue.empty()){
+            prev = nullptr;
+            blockStart = processes[idx]->arrival;
             currentTime = processes[idx]->arrival;
-            continue;
+            continue;  
+        
         }
         // from the ready queue, get the highest prio
         Process* p = ready_queue.top();

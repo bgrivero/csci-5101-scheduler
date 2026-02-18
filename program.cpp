@@ -344,6 +344,89 @@ void runSJF(int testNumber, TestCase* tc){
     
 }
 
+struct _PrioComp{
+    bool operator()(Process* a, Process*b){
+        if (a->nice != b->nice)
+            return a->nice > b->nice;
+        if (a->arrival != b->arrival)
+            return a->arrival > b->arrival;
+        return a->id > b->id;
+    }
+};
+
+void runPrio(int testNumber, TestCase* tc){
+    cout << testNumber << " " << tc->algorithm << endl;
+    int n = tc->size;
+    Process** processes = tc->processes;
+    int completed=0;
+    int currentTime= 0;
+    int idx = 0;
+
+    // sort processes by arrival time, ascending
+    sort(processes, processes +n, [](Process* a, Process*b){
+        if (a->arrival != b->arrival){
+            return a->arrival < b-> arrival;
+        } else{
+            return a->id < b->id;
+        }
+    });
+
+    // creates a priority queue to store the processes by priority to simplify code
+    priority_queue<Process*, vector<Process*>, _PrioComp> ready_queue;
+
+    Process* prev = nullptr;
+    int blockStart = 0;
+
+    while (completed < n){
+        // keep adding to the ready_queue all processes that have arrived.
+        while(idx<n && processes[idx]->arrival <= currentTime){
+            ready_queue.push(processes[idx]);
+            idx++;
+        }
+
+        // once you have emptied the ready queue, jump to the next process
+        if (ready_queue.empty()){
+            currentTime = processes[idx]->arrival;
+            continue;
+        }
+        // from the ready queue, get the highest prio
+        Process* p = ready_queue.top();
+        ready_queue.pop();
+
+        // calculate start and response time (for newly processed processes)
+        if(p->start_time == -1){
+            p->start_time = currentTime;
+        }
+
+        // if context switch is detected, print the current block and reset it
+        if(prev != nullptr && prev != p){
+            cout << blockStart << " "<< prev -> id <<" "<<  currentTime - blockStart << endl;
+            blockStart = currentTime;
+        }
+
+        // run for 1 tick
+        p->remaining --;
+        currentTime ++;
+
+        // if the process is done, print and reset. else, push it back so that it could be
+        // reconsidered by the priority queue.
+        if (p->remaining == 0){
+            cout << blockStart <<" "<<  p -> id <<" "<<  currentTime - blockStart << 'X' << endl;
+            p->completion_time = currentTime;
+            completed++;
+            prev = nullptr;
+            blockStart = currentTime;
+        } else {
+            ready_queue.push(p);
+            prev = p;
+        }
+    }
+    // sort it back by id order
+    sort(processes, processes + n, [](Process* a, Process* b){
+    return a->id < b->id;
+    });
+    printResults(testNumber,tc);
+}
 
 int main(void){
     int num_test;
@@ -373,6 +456,8 @@ int main(void){
             runSRTF(i+1, testCase);
         } else if (algorithm == "SJF"){
             runSJF(i+1,testCase);
+        } else if (algorithm == "P"){
+            runPrio(i+1,testCase);
         }
     }
     

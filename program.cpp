@@ -2,6 +2,8 @@
 #include <vector>
 #include <limits.h>
 #include <iostream>
+#include <algorithm>
+#include <queue>
 using namespace std;
 
 /*
@@ -277,6 +279,72 @@ void runSRTF(int testNumber, TestCase* tc){
     printResults(testNumber, tc);
 }
 
+struct _SJFcomp{
+    bool operator()(Process* a, Process*b){
+         if (a->burst != b->burst)
+            return a->burst > b->burst;
+        if (a->arrival != b->arrival)
+            return a->arrival > b->arrival;
+        return a->id > b->id;
+    }
+};
+
+void runSJF(int testNumber, TestCase* tc){
+    cout << testNumber << " " << tc->algorithm << endl;
+    int n = tc->size;
+    Process** processes = tc->processes;
+    int completed=0;
+    int currentTime= 0;
+    int idx = 0;
+
+    // sort processes by arrival time, ascending
+    sort(processes, processes +n, [](Process* a, Process*b){
+        if (a->arrival != b->arrival){
+            return a->arrival < b-> arrival;
+        } else{
+            return a->id < b->id;
+        }
+    });
+
+    // creates a priority queue to store the processes by burst time to simplify code
+    priority_queue<Process*, vector<Process*>, _SJFcomp> ready_queue;
+
+    while(completed<n){
+        // keep adding to the ready_queue all processes that have arrived.
+        while(idx<n && processes[idx]->arrival <= currentTime){
+            ready_queue.push(processes[idx]);
+            idx++;
+        }
+
+        // once you have emptied the ready queue, jump to the next process
+        if (ready_queue.empty()){
+            currentTime = processes[idx]->arrival;
+            continue;
+        }
+        // from the ready queue, get the shortest job
+        Process* p = ready_queue.top();
+        ready_queue.pop();
+
+        p->start_time = currentTime;
+        p->completion_time = currentTime + p->burst;
+        p->turnaround_time = p->completion_time - p->arrival; 
+        p->waiting_time = p->turnaround_time - p->burst;
+        p->response_time = currentTime - p->arrival;
+        currentTime += p->burst;
+        completed ++;
+
+        cout << currentTime << " " << p->id << " " << p-> burst <<'X'<< endl;
+    }
+
+    // sort it back by id order
+    sort(processes, processes + n, [](Process* a, Process* b){
+    return a->id < b->id;
+    });
+    printResults(testNumber,tc);
+    
+}
+
+
 int main(void){
     int num_test;
     cin >> num_test;
@@ -293,16 +361,18 @@ int main(void){
         for (int j = 0; j < num_process; j++){
             int arrival, burst, nice;
             cin >> arrival >> burst >> nice;
-            Process* proc = new Process(j, arrival, burst, nice);
+            Process* proc = new Process(j+1, arrival, burst, nice);
             testCase->addProcess(j, proc);
         }
         // Temporary print function to keep track of processes
         testCase->printTestCase(i + 1);
         if (algorithm == "FCFS"){
-            runFCFS(i, testCase);
+            runFCFS(i+1, testCase);
         }
         else if (algorithm == "SRTF"){
-            runSRTF(i, testCase);
+            runSRTF(i+1, testCase);
+        } else if (algorithm == "SJF"){
+            runSJF(i+1,testCase);
         }
     }
     

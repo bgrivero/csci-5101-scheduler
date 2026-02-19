@@ -158,9 +158,9 @@ void runFCFS(int testNumber, TestCase* tc){
             // In the case that there is a chosen process, it is compared with the ith process.
             // Comparisons are: which process arrived first, and if they arrived at the same time, then who has a lower id.
             else {
-                Process* best = processes[chosenID];
-                Process* cur = processes[i];
-                if (cur->arrival < best->arrival || cur->arrival == best->arrival && cur->id < best->id){
+                Process* chosen = processes[chosenID];
+                Process* ith = processes[i];
+                if (ith->arrival < chosen->arrival || ith->arrival == chosen->arrival && ith->id < chosen->id){
                     chosenID = i;
                 }
             }
@@ -202,27 +202,34 @@ void runSRTF(int testNumber, TestCase* tc){
     int n = tc->size;
     Process** processes = tc->processes;
     
+    // Serves as something like an array to keep track of completed processes.
+    // Tracked by index (n) and becomes true once completed, this is updated at the end of the function.
     vector<bool> done(n, false);
     int completed = 0;
     int currentTime= 0;
 
+    // Main meat of the algorithm, it runs until all completed = n, meaning all processes have finished.
     while (completed < n){
+        // Initialized as -1 for placeholder, this means that there is no process that has been chosen yet.
         int chosenID = -1;
+        // Iterates over all processes.
         for (int i = 0; i < n; i++){
-            if (done[i]) continue;
-            if (processes[i]->arrival > currentTime) continue;
+            if (done[i]) continue; // This just skips the process if it is already skipped.
+            if (processes[i]->arrival > currentTime) continue; // This just skips processes that have not yet arrived.
 
             if (chosenID == -1){
                 chosenID = i;
             }
+            // In the case that there is a chosen process, it is compared with the ith process.
+            // Comparisons are: which process has shorter remaining time, and in the case of a tie, apply the fcfs logic.
             else {
-                Process* best = processes[chosenID];
-                Process* cur = processes[i];
-                if (cur->remaining < best->remaining){
+                Process* chosen = processes[chosenID];
+                Process* ith = processes[i];
+                if (ith->remaining < chosen->remaining){
                     chosenID = i;
                 }
-                else if (cur->remaining == best->remaining) {
-                    if (cur->arrival < best->arrival || cur->arrival == best->arrival && cur->id < best->id){
+                else if (ith->remaining == chosen->remaining) {
+                    if (ith->arrival < chosen->arrival || ith->arrival == chosen->arrival && ith->id < chosen->id){
                         chosenID = i;
                     }
                 }
@@ -231,7 +238,8 @@ void runSRTF(int testNumber, TestCase* tc){
         
         // Handle CPU being idle by skipping to next time where a process arrives
         if (chosenID == -1){
-            int timeJump = INT_MAX; // Using the highest possible number as temporary variable 
+            int timeJump = INT_MAX;
+            // Iterates over all the processes and sets timeJump to the earliest arrival of a new process.
             for (int i = 0; i < n; i++){
                 if (!done[i] && processes[i]->arrival < timeJump){
                     timeJump = processes[i]->arrival;
@@ -241,39 +249,44 @@ void runSRTF(int testNumber, TestCase* tc){
             continue;
         }
 
+        // Process has finally been chosen by now, and so it starts to run now.
         Process* p = processes[chosenID];
         if (p->start_time == -1){
             p->start_time = currentTime;
         }
 
+        // Duration the currently running process has until it terminates or is preempted.
         int runUntil = currentTime + p->remaining;
 
         for (int i = 0; i < n; i++){
             if (done[i] || i == chosenID){
                 continue;
             }
-            int arrivalTime = processes[i]->arrival;
-            if (arrivalTime > currentTime && arrivalTime < runUntil){
-                int remainingAtArrival = p->remaining - (arrivalTime - currentTime);
-                int newRem = processes[i]->remaining;
+            int incomingArrivalTime = processes[i]->arrival; // Save arrival time of currently selected process.
+            // Preemption happens here, conditional checker that ensures incoming process is actually new and will arrive while chosen process is running.
+            if (incomingArrivalTime > currentTime && incomingArrivalTime < runUntil){
+                int remainingAtArrival = p->remaining - (incomingArrivalTime - currentTime);
+                int incomingRemaining = processes[i]->remaining;
                 bool preempt = false;
-                if (newRem < remainingAtArrival){
+                if (incomingRemaining < remainingAtArrival){
                     preempt = true;
                 }
-                else if (newRem == remainingAtArrival){
+                else if (incomingRemaining == remainingAtArrival){
                     if (processes[i]->arrival < p->arrival || processes[i]->arrival == p->arrival && processes[i]->id < p->id){
                         preempt = true;
                     }
                 }
                 if (preempt){
-                    runUntil = arrivalTime;
+                    runUntil = incomingArrivalTime;
                 }
             }
         }
 
+        // Update the remaining time of the process currently running.
         int runDuration = runUntil - currentTime;
         p->remaining -= runDuration;
 
+        // Handles completed processes.
         bool finished = (p->remaining == 0);
         if (finished){
             p->completion_time = currentTime + runDuration;

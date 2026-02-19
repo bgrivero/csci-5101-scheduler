@@ -137,19 +137,26 @@ void runFCFS(int testNumber, TestCase* tc){
     int n = tc->size;
     Process** processes = tc->processes;
     
+    // Serves as something like an array to keep track of completed processes.
+    // Tracked by index (n) and becomes true once completed, this is updated at the end of the function.
     vector<bool> done(n, false);
     int completed = 0;
     int currentTime= 0;
     
+    // Main meat of the algorithm, it runs until all completed = n, meaning all processes have finished.
     while (completed < n){
+        // Initialized as -1 for placeholder, this means that there is no process that has been chosen yet.
         int chosenID = -1;
+        // Iterates over all processes.
         for (int i = 0; i < n; i++){
-            if (done[i]) continue;
-            if (processes[i]->arrival > currentTime) continue;
+            if (done[i]) continue; // This just skips the process if it is already skipped.
+            if (processes[i]->arrival > currentTime) continue; // This just skips processes that have not yet arrived.
 
             if (chosenID == -1){
                 chosenID = i;
             }
+            // In the case that there is a chosen process, it is compared with the ith process.
+            // Comparisons are: which process arrived first, and if they arrived at the same time, then who has a lower id.
             else {
                 Process* best = processes[chosenID];
                 Process* cur = processes[i];
@@ -159,9 +166,10 @@ void runFCFS(int testNumber, TestCase* tc){
             }
         }
         
-        // Handle CPU being idle by skipping to next time where a process arrives
+        // Handles CPU being idle by skipping to the next time where a process arrives.
         if (chosenID == -1){
-            int timeJump = INT_MAX; // Using the highest possible number as temporary variable
+            int timeJump = INT_MAX;
+            // Iterates over all the processes and sets timeJump to the earliest arrival of a new process.
             for (int i = 0; i < n; i++){
                 if (!done[i] && processes[i]->arrival < timeJump){
                     timeJump = processes[i]->arrival;
@@ -171,11 +179,13 @@ void runFCFS(int testNumber, TestCase* tc){
             continue;
         }
 
+        // Process has finally been chosen by now, and so it starts to run now.
         Process* p = processes[chosenID];
         if (p->start_time == -1){
             p->start_time = currentTime;
         }
 
+        // Output for gantt "chart".
         cout << currentTime << " " << p->id << " " << p->burst << "X" << endl;
         currentTime += p->burst;
         p->remaining = 0;

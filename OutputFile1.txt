@@ -1,0 +1,408 @@
+Test Case 1: SRTF
+  Process 1 | Arrival: 0 | Burst: 50 | Nice: 2
+  Process 2 | Arrival: 40 | Burst: 2 | Nice: 3
+  Process 3 | Arrival: 20 | Burst: 3 | Nice: 1
+--------------------------
+1 SRTF
+0 1 20
+20 3 3X
+23 1 17
+40 2 2X
+42 1 13X
+Total time elapsed: 55ns
+Total CPU burst time: 55ns
+CPU Utilization: 100%
+Throughput: 0.0545455 processes/ns
+Waiting times:
+ Process 1: 5ns
+ Process 2: 0ns
+ Process 3: 0ns
+Average waiting time: 1.66667ns
+Turnaround times:
+ Process 1: 55ns
+ Process 2: 2ns
+ Process 3: 3ns
+Average turnaround time: 20ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 0ns
+Average response time: 0ns
+Test Case 2: FCFS
+  Process 1 | Arrival: 100 | Burst: 10 | Nice: 1
+  Process 2 | Arrival: 10 | Burst: 70 | Nice: 1
+--------------------------
+2 FCFS
+10 2 70X
+100 1 10X
+Total time elapsed: 110ns
+Total CPU burst time: 80ns
+CPU Utilization: 72%
+Throughput: 0.0181818 processes/ns
+Waiting times:
+ Process 1: 0ns
+ Process 2: 0ns
+Average waiting time: 0ns
+Turnaround times:
+ Process 1: 10ns
+ Process 2: 70ns
+Average turnaround time: 40ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+Average response time: 0ns
+Test Case 3: RR (Q=25)
+  Process 1 | Arrival: 0 | Burst: 30 | Nice: 3
+  Process 2 | Arrival: 25 | Burst: 45 | Nice: 4
+  Process 3 | Arrival: 70 | Burst: 10 | Nice: 1
+  Process 4 | Arrival: 45 | Burst: 15 | Nice: 5
+--------------------------
+3 RR
+0 1 25
+25 2 25
+50 4 15X
+65 1 5X
+70 3 10X
+80 2 20X
+Total time elapsed: 100ns
+Total CPU burst time: 100ns
+CPU Utilization: 100%
+Throughput: 0.04 processes/ns
+Waiting times:
+ Process 1: 40ns
+ Process 2: 30ns
+ Process 3: 0ns
+ Process 4: 5ns
+Average waiting time: 18.75ns
+Turnaround times:
+ Process 1: 70ns
+ Process 2: 75ns
+ Process 3: 10ns
+ Process 4: 20ns
+Average turnaround time: 43.75ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 0ns
+ Process 4: 5ns
+Average response time: 1.25ns
+Test Case 4: FCFS
+  Process 1 | Arrival: 80 | Burst: 10 | Nice: 1
+  Process 2 | Arrival: 0 | Burst: 100 | Nice: 3
+  Process 3 | Arrival: 50 | Burst: 10 | Nice: 2
+--------------------------
+4 FCFS
+0 2 100X
+100 3 10X
+110 1 10X
+Total time elapsed: 120ns
+Total CPU burst time: 120ns
+CPU Utilization: 100%
+Throughput: 0.025 processes/ns
+Waiting times:
+ Process 1: 30ns
+ Process 2: 0ns
+ Process 3: 50ns
+Average waiting time: 26.6667ns
+Turnaround times:
+ Process 1: 40ns
+ Process 2: 100ns
+ Process 3: 60ns
+Average turnaround time: 66.6667ns
+Response times:
+ Process 1: 30ns
+ Process 2: 0ns
+ Process 3: 50ns
+Average response time: 26.6667ns
+Test Case 5: SJF
+  Process 1 | Arrival: 0 | Burst: 100 | Nice: 2
+  Process 2 | Arrival: 20 | Burst: 20 | Nice: 1
+  Process 3 | Arrival: 20 | Burst: 30 | Nice: 1
+  Process 4 | Arrival: 20 | Burst: 10 | Nice: 1
+--------------------------
+5 SJF
+100 1 100X
+110 4 10X
+130 2 20X
+160 3 30X
+Total time elapsed: 160ns
+Total CPU burst time: 160ns
+CPU Utilization: 100%
+Throughput: 0.025 processes/ns
+Waiting times:
+ Process 1: 0ns
+ Process 2: 90ns
+ Process 3: 110ns
+ Process 4: 80ns
+Average waiting time: 70ns
+Turnaround times:
+ Process 1: 100ns
+ Process 2: 110ns
+ Process 3: 140ns
+ Process 4: 90ns
+Average turnaround time: 110ns
+Response times:
+ Process 1: 0ns
+ Process 2: 90ns
+ Process 3: 110ns
+ Process 4: 80ns
+Average response time: 70ns
+Test Case 6: SRTF
+  Process 1 | Arrival: 0 | Burst: 65 | Nice: 2
+  Process 2 | Arrival: 40 | Burst: 20 | Nice: 1
+  Process 3 | Arrival: 90 | Burst: 15 | Nice: 1
+  Process 4 | Arrival: 20 | Burst: 10 | Nice: 1
+  Process 5 | Arrival: 50 | Burst: 5 | Nice: 3
+--------------------------
+6 SRTF
+0 1 20
+20 4 10X
+30 1 10
+40 2 10
+50 5 5X
+55 2 10X
+65 1 35X
+100 3 15X
+Total time elapsed: 115ns
+Total CPU burst time: 115ns
+CPU Utilization: 100%
+Throughput: 0.0434783 processes/ns
+Waiting times:
+ Process 1: 35ns
+ Process 2: 5ns
+ Process 3: 10ns
+ Process 4: 0ns
+ Process 5: 0ns
+Average waiting time: 10ns
+Turnaround times:
+ Process 1: 100ns
+ Process 2: 25ns
+ Process 3: 25ns
+ Process 4: 10ns
+ Process 5: 5ns
+Average turnaround time: 33ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 10ns
+ Process 4: 0ns
+ Process 5: 0ns
+Average response time: 2ns
+Test Case 7: P
+  Process 1 | Arrival: 40 | Burst: 20 | Nice: 1
+  Process 2 | Arrival: 30 | Burst: 20 | Nice: 2
+  Process 3 | Arrival: 20 | Burst: 20 | Nice: 3
+  Process 4 | Arrival: 10 | Burst: 20 | Nice: 4
+  Process 5 | Arrival: 0 | Burst: 20 | Nice: 5
+--------------------------
+7 P
+0 5 10
+10 4 10
+20 3 10
+30 2 10
+40 1 20X
+60 2 10X
+70 3 10X
+80 4 10X
+90 5 10X
+Total time elapsed: 100ns
+Total CPU burst time: 100ns
+CPU Utilization: 100%
+Throughput: 0.05 processes/ns
+Waiting times:
+ Process 1: 0ns
+ Process 2: 20ns
+ Process 3: 40ns
+ Process 4: 60ns
+ Process 5: 80ns
+Average waiting time: 40ns
+Turnaround times:
+ Process 1: 20ns
+ Process 2: 40ns
+ Process 3: 60ns
+ Process 4: 80ns
+ Process 5: 100ns
+Average turnaround time: 60ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 0ns
+ Process 4: 0ns
+ Process 5: 0ns
+Average response time: 0ns
+Test Case 8: P
+  Process 1 | Arrival: 20 | Burst: 10 | Nice: 5
+  Process 2 | Arrival: 0 | Burst: 50 | Nice: 8
+  Process 3 | Arrival: 10 | Burst: 10 | Nice: 9
+  Process 4 | Arrival: 20 | Burst: 10 | Nice: 10
+--------------------------
+8 P
+0 2 20
+20 1 10X
+30 2 30X
+60 3 10X
+70 4 10X
+Total time elapsed: 80ns
+Total CPU burst time: 80ns
+CPU Utilization: 100%
+Throughput: 0.05 processes/ns
+Waiting times:
+ Process 1: 0ns
+ Process 2: 10ns
+ Process 3: 50ns
+ Process 4: 50ns
+Average waiting time: 27.5ns
+Turnaround times:
+ Process 1: 10ns
+ Process 2: 60ns
+ Process 3: 60ns
+ Process 4: 60ns
+Average turnaround time: 47.5ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 50ns
+ Process 4: 50ns
+Average response time: 25ns
+Test Case 9: RR (Q=1)
+  Process 1 | Arrival: 4 | Burst: 5 | Nice: 5
+  Process 2 | Arrival: 2 | Burst: 4 | Nice: 4
+  Process 3 | Arrival: 0 | Burst: 3 | Nice: 3
+--------------------------
+9 RR
+0 3 1
+1 3 1
+2 2 1
+3 3 1X
+4 1 1
+5 2 1
+6 1 1
+7 2 1
+8 1 1
+9 2 1X
+10 1 1
+11 1 1X
+Total time elapsed: 12ns
+Total CPU burst time: 12ns
+CPU Utilization: 100%
+Throughput: 0.25 processes/ns
+Waiting times:
+ Process 1: 3ns
+ Process 2: 4ns
+ Process 3: 1ns
+Average waiting time: 2.66667ns
+Turnaround times:
+ Process 1: 8ns
+ Process 2: 8ns
+ Process 3: 4ns
+Average turnaround time: 6.66667ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 0ns
+Average response time: 0ns
+Test Case 10: RR (Q=10)
+  Process 1 | Arrival: 0 | Burst: 100 | Nice: 2
+  Process 2 | Arrival: 10 | Burst: 30 | Nice: 4
+  Process 3 | Arrival: 20 | Burst: 10 | Nice: 5
+  Process 4 | Arrival: 15 | Burst: 40 | Nice: 1
+  Process 5 | Arrival: 55 | Burst: 80 | Nice: 3
+  Process 6 | Arrival: 60 | Burst: 20 | Nice: 1
+  Process 7 | Arrival: 70 | Burst: 30 | Nice: 2
+  Process 8 | Arrival: 25 | Burst: 10 | Nice: 10
+--------------------------
+10 RR
+0 1 10
+10 2 10
+20 3 10X
+30 8 10X
+40 4 10
+50 1 10
+60 6 10
+70 7 10
+80 5 10
+90 2 10
+100 4 10
+110 1 10
+120 6 10X
+130 7 10
+140 5 10
+150 2 10X
+160 4 10
+170 1 10
+180 7 10X
+190 5 10
+200 4 10X
+210 1 10
+220 5 10
+230 1 10
+240 5 10
+250 1 10
+260 5 10
+270 1 10
+280 5 10
+290 1 10
+300 5 10X
+310 1 10X
+Total time elapsed: 320ns
+Total CPU burst time: 320ns
+CPU Utilization: 100%
+Throughput: 0.025 processes/ns
+Waiting times:
+ Process 1: 220ns
+ Process 2: 120ns
+ Process 3: 0ns
+ Process 4: 155ns
+ Process 5: 175ns
+ Process 6: 50ns
+ Process 7: 90ns
+ Process 8: 5ns
+Average waiting time: 101.875ns
+Turnaround times:
+ Process 1: 320ns
+ Process 2: 150ns
+ Process 3: 10ns
+ Process 4: 195ns
+ Process 5: 255ns
+ Process 6: 70ns
+ Process 7: 120ns
+ Process 8: 15ns
+Average turnaround time: 141.875ns
+Response times:
+ Process 1: 0ns
+ Process 2: 0ns
+ Process 3: 0ns
+ Process 4: 25ns
+ Process 5: 25ns
+ Process 6: 0ns
+ Process 7: 0ns
+ Process 8: 5ns
+Average response time: 6.875ns
+Test Case 11: SJF
+  Process 1 | Arrival: 0 | Burst: 50 | Nice: 2
+  Process 2 | Arrival: 40 | Burst: 2 | Nice: 3
+  Process 3 | Arrival: 20 | Burst: 3 | Nice: 1
+--------------------------
+11 SJF
+50 1 50X
+52 2 2X
+55 3 3X
+Total time elapsed: 55ns
+Total CPU burst time: 55ns
+CPU Utilization: 100%
+Throughput: 0.0545455 processes/ns
+Waiting times:
+ Process 1: 0ns
+ Process 2: 10ns
+ Process 3: 32ns
+Average waiting time: 14ns
+Turnaround times:
+ Process 1: 50ns
+ Process 2: 12ns
+ Process 3: 35ns
+Average turnaround time: 32.3333ns
+Response times:
+ Process 1: 0ns
+ Process 2: 10ns
+ Process 3: 32ns
+Average response time: 14ns

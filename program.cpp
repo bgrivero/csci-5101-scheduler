@@ -348,15 +348,13 @@ void runSJF(int testNumber, TestCase* tc){
         Process* p = ready_queue.top();
         ready_queue.pop();
 
+        cout << currentTime << " " << p->id << " " << p-> burst <<'X'<< endl;
+
         p->start_time = currentTime;
         p->completion_time = currentTime + p->burst;
-        p->turnaround_time = p->completion_time - p->arrival; 
-        p->waiting_time = p->turnaround_time - p->burst;
-        p->response_time = currentTime - p->arrival;
         currentTime += p->burst;
         completed ++;
-
-        cout << currentTime << " " << p->id << " " << p-> burst <<'X'<< endl;
+        
     }
 
     // sort it back by id order
@@ -572,8 +570,6 @@ int main(void){
             Process* proc = new Process(j+1, arrival, burst, nice);
             testCase->addProcess(j, proc);
         }
-        // Temporary print function to keep track of processes
-        testCase->printTestCase(i + 1);
         if (algorithm == "FCFS"){
             runFCFS(i+1, testCase);
         }

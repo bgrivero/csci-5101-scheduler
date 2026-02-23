@@ -51,23 +51,6 @@ struct TestCase {
         processes[idx] = proc;
     }
     
-    void printTestCase(int testNumber){
-        cout << "Test Case " << testNumber << ": " << algorithm;
-        if (algorithm == "RR"){
-            cout << " (Q=" << quantum << ")";
-        }
-        cout << "\n";
-        for (int i = 0; i < size; i++){
-            Process* p = processes[i];
-            cout << "  Process " << p->id
-                << " | Arrival: " << p->arrival
-                << " | Burst: " << p->burst
-                << " | Nice: " << p->nice
-                << "\n";
-        }
-        cout << "--------------------------\n";
-    }
-    
     ~TestCase(){
         for (int i = 0; i < size; i++){
             delete processes[i];
@@ -78,18 +61,20 @@ struct TestCase {
 
 void printResults(int testNumber, TestCase* tc) {
     int n = tc->size;
-    Process** procs = tc->processes;
+    Process** processes = tc->processes;
 
-    // compute metrics for each process
+    // Compute metrics for each process
     int totalBurst = 0;
     int totalTime = 0;
-    for (int i = 0; i < n; i++) {
-        Process* p = procs[i];
+    for (int i = 0; i < n; i++){
+        Process* p = processes[i];
         p->turnaround_time = p->completion_time - p->arrival;
         p->waiting_time    = p->turnaround_time - p->burst;
         p->response_time   = p->start_time - p->arrival;
         totalBurst += p->burst;
-        if (p->completion_time > totalTime) totalTime = p->completion_time;
+        if (p->completion_time > totalTime){
+            totalTime = p->completion_time;   
+        }
     }
 
     int cpuUtil = (int)((double)totalBurst / totalTime * 100);
@@ -100,32 +85,32 @@ void printResults(int testNumber, TestCase* tc) {
     cout << "CPU Utilization: " << cpuUtil << "%" << endl;
     cout << "Throughput: " << throughput << " processes/ns" << endl;
 
-    // waiting times
+    // Waiting times
     double avgWait = 0;
     cout << "Waiting times:" << endl;
-    for (int i = 0; i < n; i++) {
-        cout << " Process " << procs[i]->id << ": " << procs[i]->waiting_time << "ns" << endl;
-        avgWait += procs[i]->waiting_time;
+    for (int i = 0; i < n; i++){
+        cout << " Process " << processes[i]->id << ": " << processes[i]->waiting_time << "ns" << endl;
+        avgWait += processes[i]->waiting_time;
     }
     avgWait /= n;
     cout << "Average waiting time: " << avgWait << "ns" << endl;
 
-    // turnaround times
+    // Turnaround times
     double avgTurn = 0;
-    cout << "Turnaround times:\n";
-    for (int i = 0; i < n; i++) {
-        cout << " Process " << procs[i]->id << ": " << procs[i]->turnaround_time << "ns" << endl;
-        avgTurn += procs[i]->turnaround_time;
+    cout << "Turnaround times:" << endl;
+    for (int i = 0; i < n; i++){
+        cout << " Process " << processes[i]->id << ": " << processes[i]->turnaround_time << "ns" << endl;
+        avgTurn += processes[i]->turnaround_time;
     }
     avgTurn /= n;
     cout << "Average turnaround time: " << avgTurn << "ns" << endl;
 
     // response times
     double avgResp = 0;
-    cout << "Response times:\n";
-    for (int i = 0; i < n; i++) {
-        cout << " Process " << procs[i]->id << ": " << procs[i]->response_time << "ns" << endl;
-        avgResp += procs[i]->response_time;
+    cout << "Response times:" << endl;
+    for (int i = 0; i < n; i++){
+        cout << " Process " << processes[i]->id << ": " << processes[i]->response_time << "ns" << endl;
+        avgResp += processes[i]->response_time;
     }
     avgResp /= n;
     cout << "Average response time: " << avgResp << "ns" << endl;

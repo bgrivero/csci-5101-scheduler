@@ -501,15 +501,18 @@ void runRoundRobin(int testNumber, TestCase* tc) {
 
         // Check for processes that arrived during this execution because these will be added in the next iteration 
         // To ensure priority over the currently preempted process 
-        while (idx < n && processes[idx]->arrival <= currentTime) {
-            fresh.push(processes[idx]);
-            idx++;
-        }
+        
 
         // If process is not finished we add it to the BACK to the queue
         // Because preempted processes goes to the back
         if (!finished) {
-            used.push(p);
+        //put new arrival into the fresh queue
+            while (idx < n && processes[idx]->arrival <= currentTime) {
+            fresh.push(processes[idx]);
+            idx++;
+        }
+        // After adding new arrivals, we add the preempted process to the back of the used queue
+        used.push(p);
         }
     }
 

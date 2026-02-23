@@ -51,6 +51,23 @@ struct TestCase {
         processes[idx] = proc;
     }
     
+    void printTestCase(int testNumber){
+        cout << "Test Case " << testNumber << ": " << algorithm;
+        if (algorithm == "RR"){
+            cout << " (Q=" << quantum << ")";
+        }
+        cout << "\n";
+        for (int i = 0; i < size; i++){
+            Process* p = processes[i];
+            cout << "  Process " << p->id
+                << " | Arrival: " << p->arrival
+                << " | Burst: " << p->burst
+                << " | Nice: " << p->nice
+                << "\n";
+        }
+        cout << "--------------------------\n";
+    }
+    
     ~TestCase(){
         for (int i = 0; i < size; i++){
             delete processes[i];
@@ -61,20 +78,18 @@ struct TestCase {
 
 void printResults(int testNumber, TestCase* tc) {
     int n = tc->size;
-    Process** processes = tc->processes;
+    Process** procs = tc->processes;
 
-    // Compute metrics for each process
+    // compute metrics for each process
     int totalBurst = 0;
     int totalTime = 0;
-    for (int i = 0; i < n; i++){
-        Process* p = processes[i];
+    for (int i = 0; i < n; i++) {
+        Process* p = procs[i];
         p->turnaround_time = p->completion_time - p->arrival;
         p->waiting_time    = p->turnaround_time - p->burst;
         p->response_time   = p->start_time - p->arrival;
         totalBurst += p->burst;
-        if (p->completion_time > totalTime){
-            totalTime = p->completion_time;   
-        }
+        if (p->completion_time > totalTime) totalTime = p->completion_time;
     }
 
     int cpuUtil = (int)((double)totalBurst / totalTime * 100);
@@ -85,32 +100,32 @@ void printResults(int testNumber, TestCase* tc) {
     cout << "CPU Utilization: " << cpuUtil << "%" << endl;
     cout << "Throughput: " << throughput << " processes/ns" << endl;
 
-    // Waiting times
+    // waiting times
     double avgWait = 0;
     cout << "Waiting times:" << endl;
-    for (int i = 0; i < n; i++){
-        cout << " Process " << processes[i]->id << ": " << processes[i]->waiting_time << "ns" << endl;
-        avgWait += processes[i]->waiting_time;
+    for (int i = 0; i < n; i++) {
+        cout << " Process " << procs[i]->id << ": " << procs[i]->waiting_time << "ns" << endl;
+        avgWait += procs[i]->waiting_time;
     }
     avgWait /= n;
     cout << "Average waiting time: " << avgWait << "ns" << endl;
 
-    // Turnaround times
+    // turnaround times
     double avgTurn = 0;
-    cout << "Turnaround times:" << endl;
-    for (int i = 0; i < n; i++){
-        cout << " Process " << processes[i]->id << ": " << processes[i]->turnaround_time << "ns" << endl;
-        avgTurn += processes[i]->turnaround_time;
+    cout << "Turnaround times:\n";
+    for (int i = 0; i < n; i++) {
+        cout << " Process " << procs[i]->id << ": " << procs[i]->turnaround_time << "ns" << endl;
+        avgTurn += procs[i]->turnaround_time;
     }
     avgTurn /= n;
     cout << "Average turnaround time: " << avgTurn << "ns" << endl;
 
-    // Response times
+    // response times
     double avgResp = 0;
-    cout << "Response times:" << endl;
-    for (int i = 0; i < n; i++){
-        cout << " Process " << processes[i]->id << ": " << processes[i]->response_time << "ns" << endl;
-        avgResp += processes[i]->response_time;
+    cout << "Response times:\n";
+    for (int i = 0; i < n; i++) {
+        cout << " Process " << procs[i]->id << ": " << procs[i]->response_time << "ns" << endl;
+        avgResp += procs[i]->response_time;
     }
     avgResp /= n;
     cout << "Average response time: " << avgResp << "ns" << endl;
@@ -447,7 +462,7 @@ void runRoundRobin(int testNumber, TestCase* tc){
     int currentTime = 0;
     int idx = 0;
 
-    // Sort processes by arrival time for easy processing
+    //Sort Processes by arrival time for easy processing 
     sort(processes, processes + n, [](Process* a, Process* b){
         if (a->arrival != b->arrival){
             return a->arrival < b->arrival;
@@ -457,63 +472,69 @@ void runRoundRobin(int testNumber, TestCase* tc){
 
     deque<Process*> readyQueue;
 
-    // Initial population at t=0
-    while (idx < n && processes[idx]->arrival <= currentTime){
-        readyQueue.push_back(processes[idx]);
-        idx++;
-    }
-
     while (completed < n){
-        // If queue is empty, CPU is idle - jump to next arrival
+        // Add all newly arrived processes to the front 
+        // maintain arrival order among new arrivals 
+        vector<Process*> newArrivals;
+        while (idx < n && processes[idx]->arrival <= currentTime){
+            newArrivals.push_back(processes[idx]);
+            idx++;
+        }
+
+        //Add new Arrivals to front (priority over waiting processes)
+        for (int i = newArrivals.size() - 1; i >= 0; i--){
+            readyQueue.push_front(newArrivals[i]);
+        }
+
+        //if queue is empty, CPI is idle - jump to next arrival
         if (readyQueue.empty()) {
             currentTime = processes[idx]->arrival;
-            while (idx < n && processes[idx]->arrival <= currentTime){
-                readyQueue.push_back(processes[idx++]);
-            }
             continue;
         }
 
-        // Get next process from front of queue
+        //Get next process from Front of queue
         Process* p = readyQueue.front();
         readyQueue.pop_front();
 
-        // Set start time if first time running
+        // Set start time if first time running 
         if (p->start_time == -1){
             p->start_time = currentTime;
         }
 
-        // Calculate how long this process will run
+        //Calculate how long this process will run
         int runTime = min(quantum, p->remaining);
         p->remaining -= runTime;
 
-        // Determine if process is complete
+        //determine if process is complete
         bool finished = (p->remaining == 0);
 
-        // Output Gantt chart entry
+        //output Gantt chart entry
         cout << currentTime << " " << p->id << " " << runTime;
         if (finished){
             cout << "X";
             p->completion_time = currentTime + runTime;
             completed++;
         }
+
         cout << endl;
 
+        //Update current time
         currentTime += runTime;
 
-        // If process is not finished we add it to the BACK to the queue
-        // Because preempted processes goes to the back
-        if (!finished){
-            readyQueue.push_back(p);
-        }
-
         // Check for processes that arrived during this execution because these will be added in the next iteration 
-        // To ensure priority over the currently preempted proces
-        vector<Process*> newArrivals;
+        //To ensure priority over the currently preempted process 
+
         while (idx < n && processes[idx]->arrival <= currentTime){
-            newArrivals.push_back(processes[idx++]);
-        }
-        for (int i = newArrivals.size() - 1; i >= 0; i--){
-            readyQueue.push_front(newArrivals[i]);
+                readyQueue.push_back(processes[idx]);
+                idx++;
+            }
+
+        //If process is not finished we add it to the BACK to the queue
+        //Because preempted processes goes to the back
+        if (!finished) {
+            //check for new arrivals
+            //add preempted process to back
+            readyQueue.push_back(p);
         }
     }
 
@@ -522,8 +543,8 @@ void runRoundRobin(int testNumber, TestCase* tc){
     });
 
     printResults(testNumber, tc);
-}
 
+}
 
 int main(void){
     int num_test;

@@ -254,18 +254,18 @@ Average response time: 0ns
 0 1 10
 10 2 10
 20 4 10
-30 8 10X
-40 3 10X
+30 3 10X
+40 8 10X
 50 1 10
 60 5 10
-70 7 10
-80 6 10
+70 6 10
+80 7 10
 90 2 10
 100 4 10
 110 1 10
 120 5 10
-130 7 10
-140 6 10X
+130 6 10X
+140 7 10
 150 2 10X
 160 4 10
 170 1 10
@@ -290,32 +290,32 @@ Throughput: 0.025 processes/ns
 Waiting times:
  Process 1: 220ns
  Process 2: 120ns
- Process 3: 20ns
+ Process 3: 10ns
  Process 4: 155ns
  Process 5: 175ns
- Process 6: 70ns
+ Process 6: 60ns
  Process 7: 100ns
- Process 8: 5ns
-Average waiting time: 108.125ns
+ Process 8: 15ns
+Average waiting time: 106.875ns
 Turnaround times:
  Process 1: 320ns
  Process 2: 150ns
- Process 3: 30ns
+ Process 3: 20ns
  Process 4: 195ns
  Process 5: 255ns
- Process 6: 90ns
+ Process 6: 80ns
  Process 7: 130ns
- Process 8: 15ns
-Average turnaround time: 148.125ns
+ Process 8: 25ns
+Average turnaround time: 146.875ns
 Response times:
  Process 1: 0ns
  Process 2: 0ns
- Process 3: 20ns
+ Process 3: 10ns
  Process 4: 5ns
  Process 5: 5ns
- Process 6: 20ns
- Process 7: 0ns
- Process 8: 5ns
+ Process 6: 10ns
+ Process 7: 10ns
+ Process 8: 15ns
 Average response time: 6.875ns
 11 SJF
 0 1 50X

@@ -560,6 +560,7 @@ int main(void){
         else if (algorithm == "RR"){
             runRoundRobin(i+1, testCase);
         }
+        delete testCase;
     }
     
     return 0;

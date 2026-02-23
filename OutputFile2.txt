@@ -263,15 +263,15 @@ Average response time: 0ns
 0 3 25
 25 2 15X
 40 1 25
-65 5 25
-90 4 25
+65 4 25
+90 5 25
 115 3 25
 140 1 10X
-150 5 25
-175 4 25
+150 4 25
+175 5 25
 200 3 25
-225 5 20X
-245 4 25
+225 4 25
+250 5 20X
 270 3 25X
 295 4 5X
 Total time elapsed: 300ns
@@ -283,19 +283,19 @@ Waiting times:
  Process 2: 15ns
  Process 3: 195ns
  Process 4: 190ns
- Process 5: 124ns
-Average waiting time: 121.8ns
+ Process 5: 149ns
+Average waiting time: 126.8ns
 Turnaround times:
  Process 1: 120ns
  Process 2: 30ns
  Process 3: 295ns
  Process 4: 270ns
- Process 5: 194ns
-Average turnaround time: 181.8ns
+ Process 5: 219ns
+Average turnaround time: 186.8ns
 Response times:
  Process 1: 10ns
  Process 2: 15ns
  Process 3: 0ns
- Process 4: 60ns
- Process 5: 14ns
+ Process 4: 35ns
+ Process 5: 39ns
 Average response time: 19.8ns

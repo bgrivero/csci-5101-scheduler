@@ -105,7 +105,7 @@ void printResults(int testNumber, TestCase* tc) {
     avgTurn /= n;
     cout << "Average turnaround time: " << avgTurn << "ns" << endl;
 
-    // response times
+    // Response times
     double avgResp = 0;
     cout << "Response times:" << endl;
     for (int i = 0; i < n; i++){
